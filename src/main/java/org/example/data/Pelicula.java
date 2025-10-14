@@ -1,4 +1,4 @@
-package org.example;
+package org.example.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,4 +13,5 @@ public class Pelicula {
     private String descripcion;
     private String genero;
     private String imagen;
+    private String idUsuario;
 }
