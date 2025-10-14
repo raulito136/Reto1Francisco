@@ -1,16 +1,11 @@
 package org.example.ui;
 
-import org.example.User.CsvUserService;
-import org.example.User.UserService;
-import org.example.User.Usuario;
+import org.example.user.UserService;
+import org.example.user.Usuario;
 import org.example.data.DataService;
 import org.example.session.AppSession;
-import org.example.data.CsvDataService;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PantallaLogin extends JFrame{

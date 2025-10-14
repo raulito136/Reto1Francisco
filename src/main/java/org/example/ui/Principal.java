@@ -1,10 +1,8 @@
 package org.example.ui;
 
-import org.example.User.CsvUserService;
-import org.example.User.UserService;
+import org.example.user.UserService;
 import org.example.data.DataService;
 import org.example.session.AppSession;
-import org.example.data.CsvDataService;
 import org.example.data.Pelicula;
 
 import javax.swing.*;

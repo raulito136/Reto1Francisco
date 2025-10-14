@@ -1,4 +1,4 @@
-package org.example.User;
+package org.example.user;
 
 import java.util.List;
 
