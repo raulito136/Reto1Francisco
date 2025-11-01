@@ -109,8 +109,6 @@ public class Principal extends JFrame {
                 });
             }
         }
-
-        modelo.fireTableDataChanged();
     }
 
     private void initListener() {
