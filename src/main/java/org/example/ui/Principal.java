@@ -134,10 +134,10 @@ public class Principal extends JFrame {
 
             if (idEliminar != null && !idEliminar.isBlank()) {
                 try {
-                    List<Pelicula> todasPeliculas = ds.cargarPeliculas();
                     Pelicula peliculaAEliminar = null;
 
-                    for (Pelicula p : todasPeliculas) {
+
+                    for (Pelicula p : peliculasUsuario) {
                         if (p.getId().equals(idEliminar)) {
                             peliculaAEliminar = p;
                             break;
@@ -145,17 +145,18 @@ public class Principal extends JFrame {
                     }
 
                     if (peliculaAEliminar == null) {
-                        JOptionPane.showMessageDialog(this, "No se ha encontrado la película");
-                    } else if (Integer.parseInt(peliculaAEliminar.getIdUsuario()) != AppSession.idUsuario) {
-                        JOptionPane.showMessageDialog(this, "No puedes eliminar la película de otro usuario");
+                        JOptionPane.showMessageDialog(this, "No se ha encontrado la película en tu lista");
+                        return;
+                    }
+
+
+                    boolean resultado = ds.eliminarPelicula(idEliminar);
+                    if (resultado) {
+                        peliculasUsuario.remove(peliculaAEliminar);
+                        JOptionPane.showMessageDialog(this, "Película eliminada correctamente");
+                        actualizarTabla();
                     } else {
-                        boolean resultado = ds.eliminarPelicula(idEliminar);
-                        if (resultado) {
-                            JOptionPane.showMessageDialog(this, "Película eliminada correctamente");
-                            actualizarTabla();
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Error al eliminar la película");
-                        }
+                        JOptionPane.showMessageDialog(this, "Error al eliminar la película");
                     }
 
                 } catch (RuntimeException ex) {
@@ -163,6 +164,7 @@ public class Principal extends JFrame {
                 }
             }
         });
+
 
         itemCerrarSesion.addActionListener(e -> {
             this.dispose();
