@@ -1,6 +1,6 @@
 package org.example.ui;
 
-import org.example.session.AppSession;
+import org.example.context.ContextService;
 import org.example.data.Pelicula;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ public class DetallePelicula extends JDialog {
         setSize(900,900);
         setLocationRelativeTo(parent);
 
-        Pelicula p= AppSession.peliculaSeleccionada;
+        Pelicula p= (Pelicula) ContextService.getInstance().getItem("PeliculaSeleccionada").get();
 
         lblAnho.setText(p.getAnho());
         lblDescripcion.setText(p.getDescripcion());

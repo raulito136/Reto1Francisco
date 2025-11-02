@@ -1,8 +1,6 @@
 package org.example.data;
 
 
-import org.example.session.AppSession;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,7 +34,7 @@ public class CsvDataService implements DataService{
 
     public void anhadirPelicula(Pelicula pelicula){
         try(BufferedWriter bw=new BufferedWriter(new FileWriter(ruta,true))){
-         String juego=  String.format("%d,%s,%s,%s,%s,%s,%s,%s",siguienteId(),pelicula.getTitulo(),pelicula.getAnho(),pelicula.getDirector(),pelicula.getDescripcion(),pelicula.getGenero(),pelicula.getImagen(),pelicula.getIdUsuario());
+         String juego=  String.format("%s,%s,%s,%s,%s,%s,%s,%s",pelicula.getId(),pelicula.getTitulo(),pelicula.getAnho(),pelicula.getDirector(),pelicula.getDescripcion(),pelicula.getGenero(),pelicula.getImagen(),pelicula.getIdUsuario());
          bw.write(juego);
          bw.newLine();
         } catch (IOException e) {

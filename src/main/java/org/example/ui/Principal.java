@@ -1,8 +1,8 @@
 package org.example.ui;
 
+import org.example.context.ContextService;
 import org.example.user.UserService;
 import org.example.data.DataService;
-import org.example.session.AppSession;
 import org.example.data.Pelicula;
 
 import javax.swing.*;
@@ -29,6 +29,7 @@ public class Principal extends JFrame {
     private JMenuItem itemCerrarSesion = new JMenuItem("Cerrar sesión");
 
     private DefaultTableModel modelo = new DefaultTableModel();
+    private int ultimoId;
 
     public Principal(DataService ds, UserService userService) {
         this.ds = ds;
@@ -90,16 +91,14 @@ public class Principal extends JFrame {
         tblTabla.setModel(modelo);
         tblTabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        actualizarTabla();
+        iniciarTabla();
     }
 
-    private void actualizarTabla() {
-        modelo.setRowCount(0);
-        peliculasUsuario.clear();
+    private void iniciarTabla() {
 
         List<Pelicula> todas = ds.cargarPeliculas();
         for (Pelicula p : todas) {
-            if (Integer.parseInt(p.getIdUsuario()) == AppSession.idUsuario) {
+            if (p.getIdUsuario().equals(ContextService.getInstance().getItem("UserId").get())) {
                 peliculasUsuario.add(p);
                 modelo.addRow(new Object[]{
                         p.getId(),
@@ -109,19 +108,25 @@ public class Principal extends JFrame {
                 });
             }
         }
+        ultimoId=todas.size()+1;
     }
 
     private void initListener() {
         tblTabla.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && tblTabla.getSelectedRow() >= 0) {
-                AppSession.peliculaSeleccionada = peliculasUsuario.get(tblTabla.getSelectedRow());
+                ContextService.getInstance().addItem("PeliculaSeleccionada", peliculasUsuario.get(tblTabla.getSelectedRow()));
                 new DetallePelicula(this).setVisible(true);
             }
         });
 
         itemAnadir.addActionListener(e -> {
-            new AnhadirNuevaPelicula(ds, this).setVisible(true);
-            actualizarTabla();
+            new AnhadirNuevaPelicula(this).setVisible(true);
+            Pelicula peliculaAñadida= (Pelicula) ContextService.getInstance().getItem("PeliculaAnadida").get();
+            peliculaAñadida.setId(String.valueOf(ultimoId));
+            ds.anhadirPelicula(peliculaAñadida);
+            peliculasUsuario.add(peliculaAñadida);
+            modelo.addRow(new Object[]{peliculaAñadida.getId(), peliculaAñadida.getTitulo(), peliculaAñadida.getDescripcion(), peliculaAñadida.getAnho()});
+            ultimoId++;
         });
 
         itemEliminar.addActionListener(e -> {
@@ -153,11 +158,20 @@ public class Principal extends JFrame {
                     boolean resultado = ds.eliminarPelicula(idEliminar);
                     if (resultado) {
                         peliculasUsuario.remove(peliculaAEliminar);
+
+                        for (int i = 0; i < modelo.getRowCount(); i++) {
+                            if (modelo.getValueAt(i, 0).equals(idEliminar)) {
+                                modelo.removeRow(i);
+                                break;
+                            }
+                        }
+
                         JOptionPane.showMessageDialog(this, "Película eliminada correctamente");
-                        actualizarTabla();
+
                     } else {
                         JOptionPane.showMessageDialog(this, "Error al eliminar la película");
                     }
+
 
                 } catch (RuntimeException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

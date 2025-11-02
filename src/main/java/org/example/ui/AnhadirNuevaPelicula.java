@@ -1,9 +1,8 @@
 package org.example.ui;
 
-import org.example.data.CsvDataService;
+import org.example.context.ContextService;
 import org.example.data.DataService;
 import org.example.data.Pelicula;
-import org.example.session.AppSession;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -11,27 +10,27 @@ import java.awt.event.*;
 public class AnhadirNuevaPelicula extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JLabel lblTitulo;
+    private JTextField tfTitulo;
+    private JTextField tfDirector;
+    private JTextField tfDescripcion;
+    private JTextField tfGenero;
+    private JTextField tfImagen;
+    private JSpinner spnAno;
     private JLabel lblEstreno;
     private JLabel lblDirector;
     private JLabel lblDescripcion;
     private JLabel lblGenero;
     private JLabel lblImagen;
-    private JTextField tfTitulo;
-    private JTextField tfAnho;
-    private JTextField tfDirector;
-    private JTextField tfDescripcion;
-    private JTextField tfGenero;
-    private JTextField tfImagen;
+    private JLabel lblTitulo;
 
-    private DataService ds;
-    public AnhadirNuevaPelicula(DataService ds, JFrame parent) {
+
+    public AnhadirNuevaPelicula(JFrame parent) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         setSize(900,900);
         setLocationRelativeTo(parent);
-        this.ds=ds;
+        spnAno.setModel(new SpinnerNumberModel(1950, 1800, 2025, 1));
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -57,12 +56,12 @@ public class AnhadirNuevaPelicula extends JDialog {
     }
 
     private void onOK() {
-        //Añadimos la pelicula
-        if (tfAnho.getText().isEmpty() || tfDescripcion.getText().isEmpty() || tfDirector.getText().isEmpty() || tfGenero.getText().isEmpty() || tfImagen.getText().isEmpty() || tfTitulo.getText().isEmpty()){
+        if (tfDescripcion.getText().isEmpty() || tfDirector.getText().isEmpty() || tfGenero.getText().isEmpty() || tfImagen.getText().isEmpty() || tfTitulo.getText().isEmpty()){
             JOptionPane.showMessageDialog(this, "Falta completar algún dato.", "Error", JOptionPane.WARNING_MESSAGE);
         }else {
-            Pelicula pelicula = new Pelicula(null, tfTitulo.getText(), tfAnho.getText(), tfDirector.getText(), tfDescripcion.getText(), tfGenero.getText(), tfImagen.getText(), String.valueOf(AppSession.idUsuario));
-            ds.anhadirPelicula(pelicula);
+
+            Pelicula pelicula = new Pelicula(null, tfTitulo.getText(), spnAno.getValue().toString(), tfDirector.getText(), tfDescripcion.getText(), tfGenero.getText(), tfImagen.getText(), ContextService.getInstance().getItem("UserId").get().toString());
+            ContextService.getInstance().addItem("PeliculaAnadida",pelicula);
             dispose();
         }
 

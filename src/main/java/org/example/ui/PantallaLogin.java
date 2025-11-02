@@ -1,9 +1,9 @@
 package org.example.ui;
 
+import org.example.context.ContextService;
 import org.example.user.UserService;
 import org.example.user.Usuario;
 import org.example.data.DataService;
-import org.example.session.AppSession;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class PantallaLogin extends JFrame{
 
             for(Usuario u:usuarios){
                 if (u.getEmail().equalsIgnoreCase(correo) && u.getContrasenha().equals(contrasenha)){
-                    AppSession.idUsuario= Integer.parseInt(u.getId());
+                    ContextService.getInstance().addItem("UserId",u.getId());
                     abrirPantallaNueva();
                 }
             }
