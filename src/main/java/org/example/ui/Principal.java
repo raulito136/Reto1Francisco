@@ -97,6 +97,7 @@ public class Principal extends JFrame {
     private void iniciarTabla() {
 
         List<Pelicula> todas = ds.cargarPeliculas();
+        ultimoId= Integer.parseInt(todas.getLast().getId())+1;
         for (Pelicula p : todas) {
             if (p.getIdUsuario().equals(ContextService.getInstance().getItem("UserId").get())) {
                 peliculasUsuario.add(p);
@@ -108,7 +109,7 @@ public class Principal extends JFrame {
                 });
             }
         }
-        ultimoId=todas.size()+1;
+
     }
 
     private void initListener() {
